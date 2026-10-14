@@ -42,10 +42,11 @@ function askAI(prompt, cb) {
     body: JSON.stringify({
       model: 'openai',
       messages: [
-        { role: 'system', content: 'You are a friendly assistant. Always answer in Burmese (Myanmar language). Keep answers concise and natural.' },
+        { role: 'system', content: 'You are a careful, thoughtful AI assistant. Think step-by-step and reason thoroughly before answering. Always answer in Burmese (Myanmar language), with clear and well-organized explanations. Be accurate: never invent facts, prices, dates, or news — if you are unsure about something, say so honestly instead of guessing.' },
         { role: 'user', content: prompt }
       ],
-      max_tokens: 600
+      temperature: 0.4,
+      max_tokens: 800
     })
   })
     .then(function (r) { return r.json(); })
