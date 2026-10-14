@@ -56,9 +56,11 @@ function askAI(prompt, cb) {
     .catch(function () { cb('⚠️ အခုဆာဗာနဲ့ ချိတ်မရဘူး။ ခဏနေမှ ထပ်စမ်းကြည့်ပါ။'); });
 }
 
+var chatBusy = false;
 function sendChat(text) {
   text = (text || chatInput.value).trim();
-  if (!text) return;
+  if (!text || chatBusy) return;
+  chatBusy = true;
   addMsg(text, 'user');
   chatInput.value = '';
   var typing = addMsg('⏳ စဉ်းစားနေတယ်…', 'ai');
@@ -68,6 +70,7 @@ function sendChat(text) {
     typing.textContent = ans.trim();
     typing.classList.remove('typing');
     chatSend.disabled = false;
+    chatBusy = false;
   });
 }
 chatSend.onclick = function () { sendChat(); };
@@ -99,11 +102,30 @@ imgGen.onclick = function () {
   var test = new Image();
   test.onload = function () {
     out.src = url;
-    dl.href = url;
     load.classList.add('hidden');
     out.classList.remove('hidden');
     dl.classList.remove('hidden');
     imgGen.disabled = false;
+    // cross-origin <a download> is ignored by browsers, so fetch as blob
+    dl.onclick = function (e) {
+      e.preventDefault();
+      dl.textContent = '⏳ သိမ်းနေတယ်…';
+      fetch(url)
+        .then(function (r) { return r.blob(); })
+        .then(function (blob) {
+          var a = document.createElement('a');
+          a.href = URL.createObjectURL(blob);
+          a.download = 'ai-image.jpg';
+          document.body.appendChild(a);
+          a.click();
+          setTimeout(function () { URL.revokeObjectURL(a.href); a.remove(); }, 4000);
+          dl.textContent = '⬇️ ပုံကို သိမ်းမယ်';
+        })
+        .catch(function () {
+          dl.textContent = '⬇️ ပုံကို သိမ်းမယ်';
+          window.open(url, '_blank');
+        });
+    };
   };
   test.onerror = function () {
     load.textContent = '⚠️ ပုံထုတ်မရဘူး။ ခဏနေမှ ထပ်စမ်းကြည့်ပါ။';
@@ -179,7 +201,8 @@ document.getElementById('tr-go').onclick = function () {
     .catch(function () { out.textContent = '⚠️ ချိတ်မရဘူး။ ခဏနေမှ ထပ်စမ်းပါ။'; });
 };
 document.getElementById('tr-copy').onclick = function () {
-  var t = document.getElementById('tr-output').textContent;
+  var t = document.getElementById('tr-output').textContent.trim();
+  if (!t || t === '…' || t.charAt(0) === '⏳') { alert('အရင် ဘာသာပြန်ပါ'); return; }
   if (navigator.clipboard) {
     navigator.clipboard.writeText(t).then(function () { alert('📋 ကူးပြီးပြီ'); });
   }
