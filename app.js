@@ -25,14 +25,34 @@ function addMsg(text, who) {
   return d;
 }
 
+function cleanReply(t) {
+  if (!t || !t.trim()) return '⚠️ အဖြေပြန်မလာဘူး။ ထပ်မေးကြည့်ပါ။';
+  t = t.trim();
+  // defensive: if the API ever leaks its reasoning JSON again, don't show it
+  if (t.charAt(0) === '{' && t.indexOf('"reasoning"') !== -1) {
+    return '⚠️ ဆာဗာအဖြေ မမှန်ဘူး။ ထပ်မေးကြည့်ပါ။';
+  }
+  return t;
+}
+
 function askAI(prompt, cb) {
-  var url = 'https://text.pollinations.ai/' + encodeURIComponent('မြန်မာလိုဖြေပါ။ ' + prompt) + '?model=openai';
-  fetch(url)
-    .then(function (r) {
-      if (!r.ok) throw new Error('http ' + r.status);
-      return r.text();
+  fetch('https://text.pollinations.ai/openai', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      model: 'openai',
+      messages: [
+        { role: 'system', content: 'You are a friendly assistant. Always answer in Burmese (Myanmar language). Keep answers concise and natural.' },
+        { role: 'user', content: prompt }
+      ],
+      max_tokens: 600
     })
-    .then(cb)
+  })
+    .then(function (r) { return r.json(); })
+    .then(function (d) {
+      var m = d && d.choices && d.choices[0] && d.choices[0].message;
+      cb(cleanReply(m && m.content));
+    })
     .catch(function () { cb('⚠️ အခုဆာဗာနဲ့ ချိတ်မရဘူး။ ခဏနေမှ ထပ်စမ်းကြည့်ပါ။'); });
 }
 
@@ -142,9 +162,20 @@ document.getElementById('tr-go').onclick = function () {
   var instruction = trMyEn
     ? 'Translate this Burmese text to English. Return only the translation, nothing else: '
     : 'Translate this English text to Burmese. Return only the translation, nothing else: ';
-  fetch('https://text.pollinations.ai/' + encodeURIComponent(instruction + src) + '?model=openai')
-    .then(function (r) { return r.text(); })
-    .then(function (t) { out.textContent = t.trim(); })
+  fetch('https://text.pollinations.ai/openai', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      model: 'openai',
+      messages: [{ role: 'user', content: instruction + src }],
+      max_tokens: 400
+    })
+  })
+    .then(function (r) { return r.json(); })
+    .then(function (d) {
+      var m = d && d.choices && d.choices[0] && d.choices[0].message;
+      out.textContent = cleanReply(m && m.content);
+    })
     .catch(function () { out.textContent = '⚠️ ချိတ်မရဘူး။ ခဏနေမှ ထပ်စမ်းပါ။'; });
 };
 document.getElementById('tr-copy').onclick = function () {
