@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="my">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>🤖 AI Tools Hub — အခမဲ့ AI tools များ</title>
+<link rel="stylesheet" href="style.css?v=1">
+</head>
+<body>
+<header class="topbar">
+  <div class="logo">🤖</div>
+  <div>
+    <h1>AI Tools Hub</h1>
+    <p class="sub">အခမဲ့ • အကောင့်မလို • ဖုန်းနဲ့တန်းသုံး</p>
+  </div>
+</header>
+
+<main id="main">
+  <!-- CHAT -->
+  <section id="tab-chat" class="tab active">
+    <div id="chat-box" class="chat-box">
+      <div class="msg ai">မင်္ဂလာပါ! 🙋 ဘာကူညီပေးရမလဲ? မေးခွန်းမေး၊ ဟာသ/ပုံပြင် တောင်း၊ idea ရှာ — အကုန်ရတယ်။</div>
+    </div>
+    <div class="chips">
+      <button data-preset="ဟာသတစ်ခုပြောပြပါ">😂 ဟာသ</button>
+      <button data-preset="ကလေးတွေအတွက်ပုံပြင်တိုတစ်ခုပြောပြပါ">📖 ပုံပြင်</button>
+      <button data-preset="လုပ်ငန်းအကြံဉာဏ်တစ်ခု ပေးပါ">💡 Idea</button>
+      <button data-preset="ဒီနေ့ရွှေဈေးအကြောင်း အကျဉ်းချုပ်ပြောပြပါ">📊 ရွှေဈေး</button>
+    </div>
+    <div class="input-row">
+      <input id="chat-input" type="text" placeholder="ဒီမှာ ရိုက်မေးပါ…" autocomplete="off">
+      <button id="chat-send" class="btn-primary">ပို့ ➤</button>
+    </div>
+  </section>
+
+  <!-- IMAGE -->
+  <section id="tab-image" class="tab">
+    <div class="card">
+      <label>ပုံအကြောင်း ရေးပါ (English လိုရေးရင် ပိုကောင်းတယ်)</label>
+      <textarea id="img-prompt" rows="3" placeholder="ဥပမာ: a cute robot drinking bubble tea, sunset"></textarea>
+      <div class="row2">
+        <div>
+          <label>စတိုင်</label>
+          <select id="img-style">
+            <option value="">သာမာန်</option>
+            <option value=", photorealistic, 8k">📷 Realistic</option>
+            <option value=", anime style, vibrant">🎌 Anime</option>
+            <option value=", 3d render, pixar style">🧊 3D</option>
+            <option value=", cartoon illustration">🎨 Cartoon</option>
+          </select>
+        </div>
+        <div>
+          <label>အရွယ်အစား</label>
+          <select id="img-size">
+            <option value="1024,1024">⬛ Square</option>
+            <option value="768,1024">📱 Portrait</option>
+            <option value="1024,768">🖥️ Landscape</option>
+          </select>
+        </div>
+      </div>
+      <button id="img-gen" class="btn-primary btn-block">🎨 ပုံထုတ်မယ်</button>
+    </div>
+    <div id="img-result" class="img-result hidden">
+      <div id="img-loading" class="loading">⏳ ပုံထုတ်နေတယ်… ခဏစောင့်ပါ</div>
+      <img id="img-out" class="hidden" alt="AI generated image">
+      <a id="img-dl" class="btn-primary btn-block hidden" download="ai-image.jpg">⬇️ ပုံကို သိမ်းမယ်</a>
+    </div>
+  </section>
+
+  <!-- TTS -->
+  <section id="tab-tts" class="tab">
+    <div class="card">
+      <label>ဖတ်စေချင်တဲ့ စာသား</label>
+      <textarea id="tts-text" rows="4" placeholder="ဒီမှာ စာရိုက်ပါ…"></textarea>
+      <label>အသံ</label>
+      <select id="tts-voice"><option>အသံများ ရှာနေတယ်…</option></select>
+      <label>အမြန်နှုန်း: <span id="tts-rate-val">1.0</span></label>
+      <input id="tts-rate" type="range" min="0.5" max="2" step="0.1" value="1">
+      <div class="row2">
+        <button id="tts-speak" class="btn-primary">🔊 ဖတ်မယ်</button>
+        <button id="tts-stop" class="btn-ghost">⏹️ ရပ်</button>
+      </div>
+      <p class="note">📌 မြန်မာအသံလိုချင်ရင် ဒီ site ကို သုံးပါ 👉 <a href="https://luuzoe.github.io/voice-ai/">Voice AI</a></p>
+    </div>
+  </section>
+
+  <!-- TRANSLATE -->
+  <section id="tab-translate" class="tab">
+    <div class="card">
+      <div class="row2">
+        <button id="tr-dir" class="btn-ghost">မြန်မာ ➜ English</button>
+        <button id="tr-go" class="btn-primary">🌐 ဘာသာပြန်မယ်</button>
+      </div>
+      <label>မူရင်းစာသား</label>
+      <textarea id="tr-input" rows="4" placeholder="ဒီမှာ စာရိုက်ပါ…"></textarea>
+      <label>ဘာသာပြန်ပြီး</label>
+      <div id="tr-output" class="output-box">…</div>
+      <button id="tr-copy" class="btn-ghost btn-block">📋 Copy ကူးမယ်</button>
+    </div>
+  </section>
+</main>
+
+<nav class="tabbar">
+  <button data-tab="tab-chat" class="active">💬<span>Chat</span></button>
+  <button data-tab="tab-image">🎨<span>ပုံထုတ်</span></button>
+  <button data-tab="tab-tts">🔊<span>အသံဖတ်</span></button>
+  <button data-tab="tab-translate">🌐<span>ဘာသာပြန်</span></button>
+</nav>
+
+<script src="app.js?v=1"></script>
+</body>
+</html>
