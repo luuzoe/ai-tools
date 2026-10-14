@@ -1,5 +1,5 @@
-// AI Tools Hub — all tools use free, no-key APIs
-// Chat + Translate: Pollinations text API | Image: Pollinations image API | TTS: browser speechSynthesis
+// AI Tools — clean minimal build
+// Chat + Translate: Pollinations text API (POST) | Image: Pollinations image API | TTS: browser speechSynthesis
 
 // ---------- Tabs ----------
 document.querySelectorAll('.tabbar button').forEach(function (b) {
@@ -15,6 +15,7 @@ document.querySelectorAll('.tabbar button').forEach(function (b) {
 var chatBox = document.getElementById('chat-box');
 var chatInput = document.getElementById('chat-input');
 var chatSend = document.getElementById('chat-send');
+var chatBusy = false;
 
 function addMsg(text, who) {
   var d = document.createElement('div');
@@ -26,11 +27,10 @@ function addMsg(text, who) {
 }
 
 function cleanReply(t) {
-  if (!t || !t.trim()) return '⚠️ အဖြေပြန်မလာဘူး။ ထပ်မေးကြည့်ပါ။';
+  if (!t || !t.trim()) return 'အဖြေပြန်မလာဘူး။ ထပ်မေးကြည့်ပါ။';
   t = t.trim();
-  // defensive: if the API ever leaks its reasoning JSON again, don't show it
   if (t.charAt(0) === '{' && t.indexOf('"reasoning"') !== -1) {
-    return '⚠️ ဆာဗာအဖြေ မမှန်ဘူး။ ထပ်မေးကြည့်ပါ။';
+    return 'ဆာဗာအဖြေ မမှန်ဘူး။ ထပ်မေးကြည့်ပါ။';
   }
   return t;
 }
@@ -54,26 +54,16 @@ function askAI(prompt, cb) {
       var m = d && d.choices && d.choices[0] && d.choices[0].message;
       cb(cleanReply(m && m.content));
     })
-    .catch(function () { cb('⚠️ အခုဆာဗာနဲ့ ချိတ်မရဘူး။ ခဏနေမှ ထပ်စမ်းကြည့်ပါ။'); });
+    .catch(function () { cb('အခုဆာဗာနဲ့ ချိတ်မရဘူး။ ခဏနေမှ ထပ်စမ်းကြည့်ပါ။'); });
 }
 
-var chatBusy = false;
 function sendChat(text) {
   text = (text || chatInput.value).trim();
-  if (!text) return;
-  // dance party trigger
-  if (/ကပြ|dance/i.test(text)) {
-    addMsg(text, 'user');
-    chatInput.value = '';
-    addMsg('💃 ကပြမယ်! 🎶', 'ai');
-    if (window.startDance) window.startDance();
-    return;
-  }
-  if (chatBusy) return;
+  if (!text || chatBusy) return;
   chatBusy = true;
   addMsg(text, 'user');
   chatInput.value = '';
-  var typing = addMsg('⏳ စဉ်းစားနေတယ်…', 'ai');
+  var typing = addMsg('စဉ်းစားနေတယ်…', 'ai');
   typing.classList.add('typing');
   chatSend.disabled = true;
   askAI(text, function (ans) {
@@ -117,10 +107,9 @@ imgGen.onclick = function () {
     dl.classList.remove('hidden');
     imgGen.disabled = false;
     if (out.scrollIntoView) out.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    // cross-origin <a download> is ignored by browsers, so fetch as blob
     dl.onclick = function (e) {
       e.preventDefault();
-      dl.textContent = '⏳ သိမ်းနေတယ်…';
+      dl.textContent = 'သိမ်းနေတယ်…';
       fetch(url)
         .then(function (r) { return r.blob(); })
         .then(function (blob) {
@@ -130,16 +119,16 @@ imgGen.onclick = function () {
           document.body.appendChild(a);
           a.click();
           setTimeout(function () { URL.revokeObjectURL(a.href); a.remove(); }, 4000);
-          dl.textContent = '⬇️ ပုံကို သိမ်းမယ်';
+          dl.textContent = 'ပုံကို သိမ်းမယ်';
         })
         .catch(function () {
-          dl.textContent = '⬇️ ပုံကို သိမ်းမယ်';
+          dl.textContent = 'ပုံကို သိမ်းမယ်';
           window.open(url, '_blank');
         });
     };
   };
   test.onerror = function () {
-    load.textContent = '⚠️ ပုံထုတ်မရဘူး။ ခဏနေမှ ထပ်စမ်းကြည့်ပါ။';
+    load.textContent = 'ပုံထုတ်မရဘူး။ ခဏနေမှ ထပ်စမ်းကြည့်ပါ။';
     imgGen.disabled = false;
   };
   test.src = url;
@@ -150,7 +139,7 @@ var synth = window.speechSynthesis;
 var voiceSel = document.getElementById('tts-voice');
 function loadVoices() {
   var voices = synth.getVoices();
-  if (!voices.length) return; // keep placeholder until voices exist
+  if (!voices.length) return;
   voiceSel.innerHTML = '';
   voices.forEach(function (v, i) {
     var o = document.createElement('option');
@@ -186,13 +175,13 @@ var trMyEn = true;
 var trDir = document.getElementById('tr-dir');
 trDir.onclick = function () {
   trMyEn = !trMyEn;
-  trDir.textContent = trMyEn ? 'မြန်မာ ➜ English' : 'English ➜ မြန်မာ';
+  trDir.textContent = trMyEn ? 'မြန်မာ → English' : 'English → မြန်မာ';
 };
 document.getElementById('tr-go').onclick = function () {
   var src = document.getElementById('tr-input').value.trim();
   if (!src) { alert('စာအရင်ရိုက်ပါ'); return; }
   var out = document.getElementById('tr-output');
-  out.textContent = '⏳ ဘာသာပြန်နေတယ်…';
+  out.textContent = 'ဘာသာပြန်နေတယ်…';
   var instruction = trMyEn
     ? 'Translate this Burmese text to English. Return only the translation, nothing else: '
     : 'Translate this English text to Burmese. Return only the translation, nothing else: ';
@@ -210,138 +199,12 @@ document.getElementById('tr-go').onclick = function () {
       var m = d && d.choices && d.choices[0] && d.choices[0].message;
       out.textContent = cleanReply(m && m.content);
     })
-    .catch(function () { out.textContent = '⚠️ ချိတ်မရဘူး။ ခဏနေမှ ထပ်စမ်းပါ။'; });
+    .catch(function () { out.textContent = 'ချိတ်မရဘူး။ ခဏနေမှ ထပ်စမ်းပါ။'; });
 };
 document.getElementById('tr-copy').onclick = function () {
   var t = document.getElementById('tr-output').textContent.trim();
-  if (!t || t === '…' || t.charAt(0) === '⏳') { alert('အရင် ဘာသာပြန်ပါ'); return; }
+  if (!t || t === '…' || t === 'ဘာသာပြန်နေတယ်…') { alert('အရင် ဘာသာပြန်ပါ'); return; }
   if (navigator.clipboard) {
-    navigator.clipboard.writeText(t).then(function () { alert('📋 ကူးပြီးပြီ'); });
+    navigator.clipboard.writeText(t).then(function () { alert('ကူးပြီးပြီ'); });
   }
 };
-
-// ---------- Dance party ----------
-(function () {
-  var overlay = document.getElementById('dance-overlay');
-  var stage = document.getElementById('dance-stage');
-  if (!overlay || !stage) return;
-  var danceTimer = null;
-
-  window.startDance = function () {
-    stage.innerHTML = '';
-    var r = document.getElementById('robot').cloneNode(true);
-    r.removeAttribute('id');
-    stage.appendChild(r);
-    overlay.classList.remove('hidden');
-    startBeat();
-    if (danceTimer) clearTimeout(danceTimer);
-    danceTimer = setTimeout(window.stopDance, 20000);
-  };
-  window.stopDance = function () {
-    overlay.classList.add('hidden');
-    stage.innerHTML = '';
-    stopBeat();
-    if (danceTimer) { clearTimeout(danceTimer); danceTimer = null; }
-  };
-  document.getElementById('dance-close').onclick = function () { window.stopDance(); };
-  overlay.addEventListener('click', function (e) { if (e.target === overlay) window.stopDance(); });
-
-  // simple synthesized dance beat (Web Audio, no files needed)
-  var actx = null, beatInt = null, noiseBuf = null;
-  function ac() {
-    if (!actx) {
-      var AC = window.AudioContext || window.webkitAudioContext;
-      if (!AC) return null;
-      actx = new AC();
-      noiseBuf = actx.createBuffer(1, actx.sampleRate * 0.2, actx.sampleRate);
-      var d = noiseBuf.getChannelData(0);
-      for (var i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
-    }
-    if (actx.state === 'suspended') actx.resume();
-    return actx;
-  }
-  function env(g, t, peak, dur) {
-    g.gain.setValueAtTime(peak, t);
-    g.gain.exponentialRampToValueAtTime(0.001, t + dur);
-  }
-  function kick(t) {
-    var o = actx.createOscillator(), g = actx.createGain();
-    o.type = 'sine';
-    o.frequency.setValueAtTime(160, t);
-    o.frequency.exponentialRampToValueAtTime(45, t + 0.12);
-    env(g, t, 0.9, 0.25);
-    o.connect(g); g.connect(actx.destination);
-    o.start(t); o.stop(t + 0.3);
-  }
-  function hat(t) {
-    var s = actx.createBufferSource(), g = actx.createGain(), f = actx.createBiquadFilter();
-    s.buffer = noiseBuf;
-    f.type = 'highpass'; f.frequency.value = 7000;
-    env(g, t, 0.25, 0.06);
-    s.connect(f); f.connect(g); g.connect(actx.destination);
-    s.start(t); s.stop(t + 0.1);
-  }
-  function snare(t) {
-    var s = actx.createBufferSource(), g = actx.createGain(), f = actx.createBiquadFilter();
-    s.buffer = noiseBuf;
-    f.type = 'bandpass'; f.frequency.value = 1800;
-    env(g, t, 0.5, 0.15);
-    s.connect(f); f.connect(g); g.connect(actx.destination);
-    s.start(t); s.stop(t + 0.2);
-  }
-  function bass(t, freq) {
-    var o = actx.createOscillator(), g = actx.createGain();
-    o.type = 'triangle';
-    o.frequency.value = freq;
-    env(g, t, 0.4, 0.22);
-    o.connect(g); g.connect(actx.destination);
-    o.start(t); o.stop(t + 0.25);
-  }
-  var bassLine = [55, 55, 65.41, 73.42];
-  function startBeat() {
-    if (!ac()) return;
-    stopBeat();
-    var step = 0;
-    var spb = 60 / 128 / 2; // 128 BPM, 8th notes
-    beatInt = setInterval(function () {
-      var t = actx.currentTime;
-      var s = step++;
-      var bar = s % 8;
-      if (bar === 0 || bar === 4) kick(t);
-      if (bar === 2 || bar === 6) snare(t);
-      hat(t);
-      if (bar % 2 === 0) bass(t, bassLine[(s >> 1) % 4]);
-    }, spb * 1000);
-  }
-  function stopBeat() {
-    if (beatInt) { clearInterval(beatInt); beatInt = null; }
-  }
-})();
-(function () {
-  var robot = document.getElementById('robot');
-  var bubble = document.getElementById('robot-bubble');
-  if (!robot || !bubble) return;
-  var greetings = [
-    'မင်္ဂလာပါ! 👋',
-    'ဘာကူညီပေးရမလဲ? 🤖',
-    'ပုံထုတ်ကြည့်ပါလား! 🎨',
-    'မေးခွန်းမေးကြည့်! 💬',
-    'ဘာသာပြန်ခိုင်းလို့ရတယ် 🌐',
-    'အသံဖတ်ခိုင်းကြည့်! 🔊'
-  ];
-  var timer = null;
-  // show a greeting bubble shortly after load
-  setTimeout(function () { showBubble(); }, 900);
-  robot.parentElement.addEventListener('click', function () {
-    robot.classList.remove('jump');
-    void robot.offsetWidth; // restart animation
-    robot.classList.add('jump');
-    showBubble();
-  });
-  function showBubble() {
-    bubble.textContent = greetings[Math.floor(Math.random() * greetings.length)];
-    bubble.classList.add('show');
-    if (timer) clearTimeout(timer);
-    timer = setTimeout(function () { bubble.classList.remove('show'); }, 2400);
-  }
-})();
