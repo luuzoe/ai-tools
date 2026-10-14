@@ -153,3 +153,33 @@ document.getElementById('tr-copy').onclick = function () {
     navigator.clipboard.writeText(t).then(function () { alert('📋 ကူးပြီးပြီ'); });
   }
 };
+
+// ---------- Robot mascot interaction ----------
+(function () {
+  var robot = document.getElementById('robot');
+  var bubble = document.getElementById('robot-bubble');
+  if (!robot || !bubble) return;
+  var greetings = [
+    'မင်္ဂလာပါ! 👋',
+    'ဘာကူညီပေးရမလဲ? 🤖',
+    'ပုံထုတ်ကြည့်ပါလား! 🎨',
+    'မေးခွန်းမေးကြည့်! 💬',
+    'ဘာသာပြန်ခိုင်းလို့ရတယ် 🌐',
+    'အသံဖတ်ခိုင်းကြည့်! 🔊'
+  ];
+  var timer = null;
+  // show a greeting bubble shortly after load
+  setTimeout(function () { showBubble(); }, 900);
+  robot.parentElement.addEventListener('click', function () {
+    robot.classList.remove('jump');
+    void robot.offsetWidth; // restart animation
+    robot.classList.add('jump');
+    showBubble();
+  });
+  function showBubble() {
+    bubble.textContent = greetings[Math.floor(Math.random() * greetings.length)];
+    bubble.classList.add('show');
+    if (timer) clearTimeout(timer);
+    timer = setTimeout(function () { bubble.classList.remove('show'); }, 2400);
+  }
+})();

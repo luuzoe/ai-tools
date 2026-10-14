@@ -4,14 +4,69 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>🤖 AI Tools Hub — အခမဲ့ AI tools များ</title>
-<link rel="stylesheet" href="style.css?v=1">
+<link rel="stylesheet" href="style.css?v=2">
 </head>
 <body>
-<header class="topbar">
-  <div class="logo">🤖</div>
-  <div>
+<div class="bg-blob b1"></div>
+<div class="bg-blob b2"></div>
+<header class="hero">
+  <div class="robot-wrap">
+    <div id="robot-bubble" class="robot-bubble">မင်္ဂလာပါ! 👋</div>
+    <svg id="robot" class="robot" viewBox="0 0 200 252" aria-label="cute robot">
+      <defs>
+        <linearGradient id="rbody" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#f2f5ff"/><stop offset="1" stop-color="#b9c4ff"/>
+        </linearGradient>
+        <radialGradient id="rglow" cx="0.5" cy="0.5" r="0.5">
+          <stop offset="0" stop-color="#aef4ff"/><stop offset="1" stop-color="#00d4ff"/>
+        </radialGradient>
+      </defs>
+      <!-- antenna -->
+      <line x1="100" y1="30" x2="100" y2="12" stroke="#8f9bdc" stroke-width="6" stroke-linecap="round"/>
+      <circle class="antenna-ball" cx="100" cy="9" r="7" fill="url(#rglow)"/>
+      <!-- ears -->
+      <rect x="42" y="52" width="12" height="32" rx="6" fill="#8f9bdc"/>
+      <rect x="146" y="52" width="12" height="32" rx="6" fill="#8f9bdc"/>
+      <!-- head -->
+      <rect x="54" y="28" width="92" height="74" rx="26" fill="url(#rbody)" stroke="#8f9bdc" stroke-width="2"/>
+      <!-- eyes -->
+      <ellipse class="eye" cx="84" cy="62" rx="10" ry="13" fill="#23264d"/>
+      <ellipse class="eye" cx="116" cy="62" rx="10" ry="13" fill="#23264d"/>
+      <circle class="eye-hi" cx="87" cy="58" r="3.5" fill="#fff"/>
+      <circle class="eye-hi" cx="119" cy="58" r="3.5" fill="#fff"/>
+      <!-- blush + smile -->
+      <ellipse cx="70" cy="78" rx="7" ry="4.5" fill="#ff9db1" opacity="0.8"/>
+      <ellipse cx="130" cy="78" rx="7" ry="4.5" fill="#ff9db1" opacity="0.8"/>
+      <path d="M88 82 Q100 93 112 82" stroke="#23264d" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+      <!-- neck + body -->
+      <rect x="92" y="102" width="16" height="10" rx="4" fill="#8f9bdc"/>
+      <rect x="64" y="110" width="72" height="72" rx="24" fill="url(#rbody)" stroke="#8f9bdc" stroke-width="2"/>
+      <circle class="core" cx="100" cy="140" r="13" fill="url(#rglow)"/>
+      <rect x="80" y="160" width="40" height="8" rx="4" fill="#8f9bdc" opacity="0.55"/>
+      <!-- left arm (static) -->
+      <rect x="46" y="118" width="16" height="46" rx="8" fill="#c6cffb" stroke="#8f9bdc" stroke-width="2"/>
+      <circle cx="54" cy="168" r="10" fill="#c6cffb" stroke="#8f9bdc" stroke-width="2"/>
+      <!-- right arm (waving) -->
+      <g class="arm-wave">
+        <rect x="138" y="112" width="16" height="44" rx="8" fill="#c6cffb" stroke="#8f9bdc" stroke-width="2"/>
+        <circle cx="146" cy="112" r="9" fill="#c6cffb" stroke="#8f9bdc" stroke-width="2"/>
+      </g>
+      <!-- legs -->
+      <g class="leg leg-l">
+        <rect x="78" y="180" width="18" height="36" rx="9" fill="#c6cffb" stroke="#8f9bdc" stroke-width="2"/>
+        <ellipse cx="87" cy="220" rx="15" ry="8" fill="#8f9bdc"/>
+      </g>
+      <g class="leg leg-r">
+        <rect x="104" y="180" width="18" height="36" rx="9" fill="#c6cffb" stroke="#8f9bdc" stroke-width="2"/>
+        <ellipse cx="113" cy="220" rx="15" ry="8" fill="#8f9bdc"/>
+      </g>
+    </svg>
+    <div class="robot-shadow"></div>
+  </div>
+  <div class="hero-text">
     <h1>AI Tools Hub</h1>
     <p class="sub">အခမဲ့ • အကောင့်မလို • ဖုန်းနဲ့တန်းသုံး</p>
+    <p class="hint">🤖 robot ကို နှိပ်ကြည့်ပါ!</p>
   </div>
 </header>
 
@@ -107,6 +162,6 @@
   <button data-tab="tab-translate">🌐<span>ဘာသာပြန်</span></button>
 </nav>
 
-<script src="app.js?v=1"></script>
+<script src="app.js?v=2"></script>
 </body>
 </html>
