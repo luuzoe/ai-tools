@@ -107,6 +107,7 @@ imgGen.onclick = function () {
     out.classList.remove('hidden');
     dl.classList.remove('hidden');
     imgGen.disabled = false;
+    if (out.scrollIntoView) out.scrollIntoView({ behavior: 'smooth', block: 'center' });
     // cross-origin <a download> is ignored by browsers, so fetch as blob
     dl.onclick = function (e) {
       e.preventDefault();
@@ -140,6 +141,7 @@ var synth = window.speechSynthesis;
 var voiceSel = document.getElementById('tts-voice');
 function loadVoices() {
   var voices = synth.getVoices();
+  if (!voices.length) return; // keep placeholder until voices exist
   voiceSel.innerHTML = '';
   voices.forEach(function (v, i) {
     var o = document.createElement('option');
