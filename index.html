@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>🤖 AI Tools Hub — အခမဲ့ AI tools များ</title>
-<link rel="stylesheet" href="style.css?v=7">
+<link rel="stylesheet" href="style.css?v=8">
 </head>
 <body>
 <div class="bg-blob b1"></div>
@@ -87,6 +87,7 @@
       <button data-preset="ဟာသတစ်ခုပြောပြပါ">😂 ဟာသ</button>
       <button data-preset="ကလေးတွေအတွက်ပုံပြင်တိုတစ်ခုပြောပြပါ">📖 ပုံပြင်</button>
       <button data-preset="လုပ်ငန်းအကြံဉာဏ်တစ်ခု ပေးပါ">💡 Idea</button>
+      <button data-preset="💃 ကပြပါ">💃 ကပြ</button>
       <button data-preset="ရွှေဈေးတက်/ကျစေတဲ့ အဓိကအကြောင်းအရင်းတွေ အကျဉ်းချုပ်ပြောပြပါ">📊 ရွှေဈေး</button>
     </div>
     <div class="input-row">
@@ -162,6 +163,13 @@
   </section>
 </main>
 
+<!-- Dance overlay -->
+<div id="dance-overlay" class="dance-overlay hidden">
+  <div id="dance-stage" class="dance-stage"></div>
+  <div class="dance-text">💃 ကပြနေတယ်! 🎶</div>
+  <button id="dance-close" class="btn-primary dance-close">✕ ရပ်</button>
+</div>
+
 <nav class="tabbar">
   <button data-tab="tab-chat" class="active">💬<span>Chat</span></button>
   <button data-tab="tab-image">🎨<span>ပုံထုတ်</span></button>
@@ -169,6 +177,6 @@
   <button data-tab="tab-translate">🌐<span>ဘာသာပြန်</span></button>
 </nav>
 
-<script src="app.js?v=7"></script>
+<script src="app.js?v=8"></script>
 </body>
 </html>
